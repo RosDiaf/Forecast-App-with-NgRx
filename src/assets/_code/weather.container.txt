@@ -1,0 +1,225 @@
+import { Component, OnInit } from '@angular/core';
+import { WeatherService } from './weather.service';
+import { City, 
+         Coordinates, 
+         Forecast, 
+         WeatherDescription, 
+         Clouds, 
+         Wind, 
+         WeatherSys,
+         WeatherList,
+         Weather,
+         Summary,
+         CityName,
+         CityCoordinates,
+         CityForecast,
+         CityWeatherDescription,
+         CityWeatherList,
+         CloudsForecast,
+         WindForecast,
+         WeatherSysForecast,
+         WeatherForecast,
+         SummaryForecast } from '../model/weather';
+
+import 'rxjs/add/operator/map';
+
+import { Store } from '@ngrx/store';
+import * as weatherForecast from './store/reducers/weather';
+import * as WeatherForecastActions from './store/actions/weather';
+import { Observable } from 'rxjs/Observable';
+import { take } from 'rxjs/operators'
+
+@Component({
+  selector: 'app-weather',
+  template: `
+  <app-search (cityName)='citySearch($event)'></app-search>
+  <app-results [isServiceFail]='isServiceFail'
+               [cityStateValue]='cityStateValue'>
+  </app-results>  `
+})
+export class WeatherContainer implements OnInit {
+  isServiceFail: boolean;
+  cityInterface: City;
+  coordInterface: Coordinates;
+  forecastInterface: Forecast[] = [];
+  weatherDescInterface: WeatherDescription[] = [];
+  cloudsInterface: Clouds[] = []; 
+  windInterface: Wind[] = []; 
+  weatherSysInterface: WeatherSys[] = [];
+  weatherListInterface: WeatherList[] = [];
+  weatherInterface: Weather;
+  summaryInterface: Summary;
+
+  cityStateValue: object;
+  cityObj: Object = {};
+  weatherObj: Object = {};
+
+  cityState: Observable<{forecast: any}>;
+
+  constructor(private weatherService: WeatherService, private store: Store<weatherForecast.AppState>) {}
+
+  ngOnInit() {
+    this.cityState = this.store.select('forecast');
+  }
+
+  citySearch(cityFormObj) {
+    // TO BE IMPLMENTED
+    this.weatherService.searchWeatherForCity(cityFormObj.city).subscribe((response) => {
+      this.setCoordinates(response.city);
+      this.setCity(response.city);
+      this.setForecast(response.list);
+      this.setWeatherDescription(response.list);
+      this.setClouds(response.list);
+      this.setWind(response.list);
+      this.setWeatherSys(response.list);
+      this.setWeatherList(response.list);
+      this.setWeather(response);
+      this.setSummary(response.city);
+      this.dispatchToStore();
+    }, (error) => {
+      this.isServiceFail = true;
+    })
+    this.clearArrayOfModel(this.forecastInterface);
+    this.clearArrayOfModel(this.weatherDescInterface);
+    this.clearArrayOfModel(this.cloudsInterface);
+    this.clearArrayOfModel(this.windInterface);
+    this.clearArrayOfModel(this.weatherSysInterface);
+    this.clearArrayOfModel(this.weatherListInterface);
+  }
+  
+  clearArrayOfModel(model) {
+    if(model.length) {
+      model.length = 0;
+    }
+  }
+
+  setCoordinates(city) {
+    this.coordInterface = {
+      lon: city.coord.lon,
+      lat: city.coord.lat
+    }
+  }
+
+  setCity(city) {
+    this.cityInterface = {
+      id: city.id,
+      name: city.name,
+      population: city.population,
+      coord: this.coordInterface,
+      country: city.country
+    }
+    this.cityObj = new CityName(
+      city.id,
+      city.name,
+      city.population,
+      this.coordInterface,
+      city.country);
+  }
+
+  setForecast(forecast) {
+    for (let key in forecast) {
+      this.forecastInterface.push(
+        new CityForecast(
+          forecast[key].main.temp,
+          forecast[key].main.temp_min,
+          forecast[key].main.temp_max,
+          forecast[key].main.pressure,
+          forecast[key].main.sea_level,
+          forecast[key].main.grnd_level,
+          forecast[key].main.humidity,
+          forecast[key].main.temp_kf
+        )
+      );
+    }
+  }
+
+  setWeatherDescription(list) {
+    list.map((item: any) => {
+      item.weather.map((subitem: any) => {
+        this.weatherDescInterface.push(
+          new CityWeatherDescription(
+          subitem.id,
+          subitem.main,
+          subitem.description,
+          subitem.icon)
+        )
+      })
+    })
+  }
+
+  setClouds(list) {
+    for (let key in list) {
+      this.cloudsInterface.push(
+        new CloudsForecast(list[key].clouds.all)
+      );
+    }
+  }
+
+  setWind(list) {
+    for (let key in list) {
+      WindForecast
+      this.windInterface.push(
+        new WindForecast(
+          list[key].wind.speed,
+          list[key].wind.deg
+        )
+      );
+    }
+  }
+
+  setWeatherSys(list) {
+    for (let key in list) {
+      this.weatherSysInterface.push(
+        new WeatherSysForecast(
+          list[key].sys.pod
+        )
+      )
+    }
+  }
+
+  setWeatherList(list) {
+    for (let key in list) {
+      this.weatherListInterface.push(
+        new CityWeatherList(
+          list[key].dt,
+          this.forecastInterface,
+          this.weatherDescInterface,
+          this.cloudsInterface,
+          this.windInterface,
+          this.weatherSysInterface,
+          list[key].dt_txt,
+        )
+      )
+    }
+  }
+
+  setWeather(response) {
+    this.weatherObj = new WeatherForecast(
+      this.cityInterface,
+      response.cod,
+      response.message,
+      response.cnt,
+      this.weatherListInterface
+    )
+  }
+
+  setSummary(city) {
+    this.summaryInterface = {
+      city: city.name
+    }
+  }
+
+  dispatchToStore() {
+    this.store.dispatch(new WeatherForecastActions.AddCity(this.cityObj));
+    this.store.dispatch(new WeatherForecastActions.AddForecast(this.forecastInterface));
+    this.store.dispatch(new WeatherForecastActions.AddWeatherDescription(this.weatherDescInterface));
+    this.store.dispatch(new WeatherForecastActions.AddCloudsForecast(this.cloudsInterface));
+    this.store.dispatch(new WeatherForecastActions.AddWindForecast(this.windInterface));
+    this.store.dispatch(new WeatherForecastActions.AddWeatherSysForecast(this.weatherSysInterface));
+    this.store.dispatch(new WeatherForecastActions.AddWeatherForecast(this.weatherObj));
+    this.store.dispatch(new WeatherForecastActions.AddWeatherSummary(this.summaryInterface));
+    this.store.select('forecast').pipe(take(1)).subscribe(val => {
+      this.cityStateValue = val;
+    });
+  }
+}

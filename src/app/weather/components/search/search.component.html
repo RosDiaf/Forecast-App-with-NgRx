@@ -1,0 +1,13 @@
+<form class="form-inline mb-5" [formGroup]="searchCityForm" name="searchCityForm" (ngSubmit)="search()">
+  <div class="form-group col-8 pl-0">
+    <input class="form-control mt-3 col"
+           formControlName="city"
+           id="city"
+           name="city"
+           placeholder="City"
+           type="text"
+           required>
+  </div>
+  <button class="btn-search btn btn-primary mt-3 col-4" type="submit" id="search-button">Search</button>
+  <div *ngIf="(!searchCityForm.controls['city'].valid && searchCityForm.controls['city'].touched)" class="error">Enter valid city</div>
+</form>

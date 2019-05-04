@@ -1,0 +1,6 @@
+e2e articles
+https://medium.com/@dhormale/automate-end-to-end-e2e-testing-for-angular-7-using-protractor-jasmine-4ce171aaeedc
+
+https://medium.com/@dhormale/automate-end-to-end-e2e-testing-for-angular-7-using-protractor-jasmine-4ce171aaeedc
+
+https://scotch.io/@charlieoduk/angular-end-to-end-testing507

@@ -1,0 +1,94 @@
+import * as WeatherForecastActions from '../actions/weather';
+
+export interface AppState {
+    city: State,
+    forecast: State,
+    weatherDescription: State,
+    cloudsForecast: State,
+    windForecast: State,
+    weatherSysForecast: State,
+    weatherForecast: State,
+    summary: State
+    forecastFull: State
+}
+
+export interface State {
+    city: any,
+    forecast: any,
+    weatherDescription: any,
+    cloudsForecast: any,
+    windForecast: any,
+    weatherSysForecast: any,
+    weatherForecast: any,
+    summary: any,
+    forecastFull: any
+}
+
+const initialState  = {
+    city: '',
+    forecast: '',
+    weatherDescription: '',
+    cloudsForecast: '',
+    windForecast: '',
+    weatherSysForecast: '',
+    weatherForecast: '',
+    summary: '',
+    forecastFull: ''
+}
+
+export function weatherForecastReducer(state = initialState, action: WeatherForecastActions.WeatherForecastActions) {
+    switch(action.type) {
+        case WeatherForecastActions.ADD_CITY:
+            return {
+                ...state,
+                city: Object.assign({}, action.payload)
+            }
+        case WeatherForecastActions.ADD_FORECAST:
+            return {
+                ...state,
+                forecast: Object.assign({}, action.payload)
+            }
+        case WeatherForecastActions.ADD_WEATHER_DESCRIPTION:
+            return {
+                ...state,
+                weatherDescription: Object.assign({}, action.payload)
+            }
+        case WeatherForecastActions.ADD_CLOUDS_FORECAST:
+            return {
+                ...state,
+                cloudsForecast: Object.assign({}, action.payload)
+            }
+        case WeatherForecastActions.ADD_WIND_FORECAST:
+            return {
+                ...state,
+                windForecast: Object.assign({}, action.payload)
+            }
+        case WeatherForecastActions.ADD_WEATHER_SYS_FORECAST:
+            return {
+                ...state,
+                weatherSysForecast: Object.assign({}, action.payload)
+            }
+        case WeatherForecastActions.ADD_WEATHER_FORECAST_FORECAST:
+            return {
+                ...state,
+                weatherForecast: Object.assign({}, action.payload)
+            }
+        case WeatherForecastActions.ADD_SUMMARY:
+            return {
+                ...state,
+                summary: Object.assign({}, action.payload)
+            }
+        case WeatherForecastActions.FORECAST_DATA_SUCCESSFULLY_LOADED:
+            return {
+                ...state,
+                forecastFull: action.payload,
+            }
+        case WeatherForecastActions.FORECAST_DATA_FAILED:
+            return {
+                ...state,
+                forecastFull: {},
+            }
+        default:
+            return state;
+    }
+}

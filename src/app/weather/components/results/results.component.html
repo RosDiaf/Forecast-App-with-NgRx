@@ -1,0 +1,23 @@
+<div *ngIf="cityStateValuesArr">
+  <table class="table" *ngFor="let item of cityStateValuesArr; let i = index">
+    <thead class="thead-dark">
+      <tr>
+        <th scope="col" id="city-header">City</th>
+        <th scope="col" id="time" *ngFor="let time of item.WEATHERLIST_STATE; let x = index">
+          {{ (x % 2 === 0) ? (time.dt_txt | date: 'h aaa') : null}}
+        </th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td scope="row" id="city-value">{{ item.CITY_STATE.name }}</td>
+        <td scope="row" id="temp-value" *ngFor="let item of item.WEATHERLIST_STATE; let x = index">
+          {{ (x % 2 === 0) ? (item.main.temp) : null}} <span *ngIf="(x % 2 === 0)">&deg;</span>
+        </td>
+      </tr>
+      <tr *ngIf="item.error">
+        <td colspan="3" id="error-message">{{ item.error.error.cod }} {{ item.error.error.message }}</td>
+      </tr>
+    </tbody>
+  </table>
+</div>

@@ -1,0 +1,74 @@
+import { Action } from '@ngrx/store';
+
+// TO BE IMPLEMENTED IF YOU DECIDE TO USE NG-RX
+export const ADD_FORECAST = 'ADD_FORECAST';
+export const ADD_CITY = 'ADD_CITY';
+export const ADD_WEATHER_DESCRIPTION = 'ADD_WEATHER_DESCRIPTION';
+export const ADD_CLOUDS_FORECAST = 'ADD_CLOUDS_FORECAST';
+export const ADD_WIND_FORECAST = 'ADD_WIND_FORECAST';
+export const ADD_WEATHER_SYS_FORECAST = 'ADD_WEATHER_SYS_FORECAST';
+export const ADD_WEATHER_FORECAST_FORECAST = 'ADD_WEATHER_FORECAST_FORECAST';
+export const ADD_SUMMARY = 'ADD_SUMMARY';
+export const LOAD_FORECAST_DATA = 'LOAD_FORECAST_DATA';
+export const FORECAST_DATA_SUCCESSFULLY_LOADED = 'FORECAST_DATA_SUCCESSFULLY_LOADED';
+export const FORECAST_DATA_FAILED = 'FORECAST_DATA_FAILED';
+
+export class AddCity implements Action {
+    readonly type = ADD_CITY;
+    constructor(public payload: any) {}
+}
+
+export class AddForecast implements Action {
+    readonly type = ADD_FORECAST;
+    constructor(public payload: any) {}
+}
+
+export class AddWeatherDescription implements Action {
+    readonly type = ADD_WEATHER_DESCRIPTION;
+    constructor(public payload: any) {}
+}
+
+export class AddCloudsForecast implements Action {
+    readonly type = ADD_CLOUDS_FORECAST;
+    constructor(public payload: any) {}
+}
+
+export class AddWindForecast implements Action {
+    readonly type = ADD_WIND_FORECAST;
+    constructor(public payload: any) {}
+}
+
+export class AddWeatherSysForecast implements Action {
+    readonly type = ADD_WEATHER_SYS_FORECAST;
+    constructor(public payload: any) {}
+}
+
+export class AddWeatherForecast implements Action {
+    readonly type = ADD_WEATHER_FORECAST_FORECAST;
+    constructor(public payload: any) {}
+}
+
+export class AddWeatherSummary implements Action {
+    readonly type = ADD_SUMMARY;
+    constructor(public payload: any) {}
+}
+
+export class LoadData implements Action {
+    readonly type = LOAD_FORECAST_DATA;
+    constructor(public payload: any) {}
+}
+
+export class DataSuccessfullyLoaded implements Action {
+    readonly type = FORECAST_DATA_SUCCESSFULLY_LOADED;
+    constructor(public payload: any) {}
+}
+
+export class DataFailureAction implements Action {
+    readonly type = FORECAST_DATA_FAILED;
+    constructor(public payload: any) {}
+}
+
+export type WeatherForecastActions = 
+AddCity | AddForecast | AddWeatherDescription |
+AddCloudsForecast | AddWindForecast | AddWeatherSysForecast |
+AddWeatherForecast | AddWeatherSummary | LoadData | DataSuccessfullyLoaded | DataFailureAction
